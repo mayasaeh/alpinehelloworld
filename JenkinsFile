@@ -5,6 +5,7 @@ pipeline{
     CONTAINER_NAME = "alpinehelloworld"
     STAGING = "ynov-mayas-staging"
     PRODUCTION = "ynov-mayas-production"
+    DOCKERHUB_LOGIN = credentials('dockerhub_login')
   }
   agent none
   
@@ -89,6 +90,19 @@ pipeline{
             heroku container:push -a ${PRODUCTION} web
             heroku container:release -a ${PRODUCTION} web
           '''
+        }
+      }
+    }
+
+    stage ('Push image in DockerHub'){
+        agent any
+        steps{
+            script{
+            sh '''
+                docker login -u ${DOCKERHUB_LOGIN}
+                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                docker rmi ${IMAGE_NAME}
+            '''
         }
       }
     }
