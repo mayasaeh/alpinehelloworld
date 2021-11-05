@@ -101,7 +101,7 @@ pipeline{
             sh '''
                 docker login -u mayas213 -p ${DOCKERHUB_PASSWORD}
                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                docker rmi ${IMAGE_NAME}
+                docker rmi ${IMAGE_NAME}:${IMAGE_TAG}
             '''
         }
       }
