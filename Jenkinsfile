@@ -73,6 +73,19 @@ pipeline{
         }
       }
     }
+
+    stage ('Push image on DockerHub'){
+        agent any
+        steps{
+            script{
+            sh '''
+                docker login -u mayas213 -p ${DOCKERHUB_PASSWORD}
+                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                docker rmi ${IMAGE_NAME}:${IMAGE_TAG}
+            '''
+        }
+      }
+    }
     
     stage ('Push image and deploy it in production env'){
       when{
@@ -90,19 +103,6 @@ pipeline{
             heroku container:push -a ${PRODUCTION} web
             heroku container:release -a ${PRODUCTION} web
           '''
-        }
-      }
-    }
-
-    stage ('Push image in DockerHub'){
-        agent any
-        steps{
-            script{
-            sh '''
-                docker login -u mayas213 -p ${DOCKERHUB_PASSWORD}
-                docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                docker rmi ${IMAGE_NAME}:${IMAGE_TAG}
-            '''
         }
       }
     }
