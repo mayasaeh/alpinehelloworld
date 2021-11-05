@@ -5,7 +5,7 @@ pipeline{
     CONTAINER_NAME = "alpinehelloworld"
     STAGING = "ynov-mayas-staging"
     PRODUCTION = "ynov-mayas-production"
-    DOCKERHUB_LOGIN = credentials('dockerhub_login')
+    DOCKERHUB_PASSWORD = credentials('dockerhub_password')
   }
   agent none
   
@@ -99,7 +99,7 @@ pipeline{
         steps{
             script{
             sh '''
-                docker login -u ${DOCKERHUB_LOGIN}
+                docker login -u mayas213 -p ${DOCKERHUB_PASSWORD}
                 docker push ${IMAGE_NAME}:${IMAGE_TAG}
                 docker rmi ${IMAGE_NAME}
             '''
