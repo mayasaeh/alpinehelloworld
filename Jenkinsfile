@@ -105,14 +105,12 @@ pipeline{
           '''
         }
       }
+    }    
+  }
+
+  post{
+    success{
+      slacksen (color: '#00FF00', message: "SUCCESSFUL: job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
     }
-    
-    stage('Slack Notif'){
-      agent any
-      steps{
-        slackSend color: '#BADA55', message: 'Build Successful', channel: '#jenkins'
-      }
-    }
-    
   }
 }
