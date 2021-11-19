@@ -119,7 +119,7 @@ pipeline{
             script{ 
               sh'''
                 ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${PRODUCTION_HOST} -C \'sudo docker rm -f static-webapp-prod\'
-                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${PRODUCTION_HOST} -C \'sudo docker run -d --name static-webapp-prod  -e PORT=80 -p 8080:80 ${IMAGE_NAME}\'
+                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${PRODUCTION_HOST} -C \'sudo docker run -d --name static-webapp-prod  -e PORT=80 -p 8080:80 sadofrazer/alpinehelloworld\'
               '''
             }
           }
