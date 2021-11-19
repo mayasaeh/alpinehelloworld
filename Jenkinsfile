@@ -1,3 +1,5 @@
+/* import shared library */
+@Library('ynov-slackNotifier')_
 pipeline{
   environment{
     IMAGE_NAME = "mayas213/alpinehelloworld"
@@ -126,12 +128,11 @@ pipeline{
       }
     }   
   }
-  post{
-    success{
-      slackSend (color: '#00FF00', message: "SUCCESSFUL: job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-    }
-    failure{
-      slackSend (color: '#FF0000', message: "Failure: job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+  post {
+    always{
+      script{
+        slackNotifier currentBuild.result
+      }
     }
   }
 }
