@@ -11,6 +11,13 @@ pipeline{
   
   stages{
     
+    stage('Slack Notif'){
+      agent any
+      steps{
+        slackSend color: '#BADA55', message: 'Hello, World!', channel: '#jenkins'
+      }
+    }
+    
     stage ('Build Stage'){
       agent any
       steps{
