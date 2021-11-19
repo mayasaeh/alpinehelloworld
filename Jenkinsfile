@@ -6,7 +6,7 @@ pipeline{
     STAGING = "ynov-mayas-staging"
     PRODUCTION = "ynov-mayas-production"
     DOCKERHUB_PASSWORD = credentials('dockerhub_password')
-    PRODUCTION_HOST = "54.234.238.214"
+    PRODUCTION_HOST = "52.207.214.244"
   }
   agent none
   
