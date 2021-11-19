@@ -6,6 +6,7 @@ pipeline{
     STAGING = "ynov-mayas-staging"
     PRODUCTION = "ynov-mayas-production"
     DOCKERHUB_PASSWORD = credentials('dockerhub_password')
+    PRODUCTION_HOST = "54.234.238.214"
   }
   agent none
   
@@ -105,9 +106,27 @@ pipeline{
           '''
         }
       }
+    }
+
+    stage('Deploy app on EC2-cloud Production') {
+      agent any
+      when{
+        expression{ GIT_BRANCH == 'origin/master'}
+      }
+      steps{
+        withCredentials([sshUserPrivateKey(credentialsId: "ssh-prod", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            script{ 
+              sh'''
+                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${PRODUCTION_HOST} -C \'docker rm -f static-webapp-prod\'
+                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${PRODUCTION_HOST} -C \'docker run -d --name static-webapp-prod  -e PORT=80 -p 8080:80 mayas213/alpinehelloworld\'
+              '''
+            }
+          }
+        }
+      }
     }    
   }
-
   post{
     success{
       slackSend (color: '#00FF00', message: "SUCCESSFUL: job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
