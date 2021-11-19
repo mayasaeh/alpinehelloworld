@@ -108,24 +108,21 @@ pipeline{
       }
     }
 
-    stage('Deploy app on EC2-cloud Production') {
-      agent any
-      when{
-        expression{ GIT_BRANCH == 'origin/master'}
-      }
+    stage ('Run container on PROD HOST'){
+      agent { label 'prod'}
       steps{
-        withCredentials([sshUserPrivateKey(credentialsId: "ssh_prod", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
-          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            script{ 
-              sh'''
-                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${PRODUCTION_HOST} -C \'sudo docker rm -f static-webapp-prod\'
-                ssh -o StrictHostKeyChecking=no -i ${keyfile} ${NUSER}@${PRODUCTION_HOST} -C \'sudo docker run -d --name static-webapp-prod  -e PORT=80 -p 8080:80 sadofrazer/alpinehelloworld\'
-              '''
-            }
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          script{
+            sh '''
+              sudo docker run -d --name ${CONTAINER_NAME} -e PORT=5000 -p 80:5000 ${IMAGE_NAME}:${IMAGE_TAG}
+              sleep 5
+              curl http://localhost:80 | grep -q "Hello world!"
+              curl http://${PRODUCTION_HOST}:80 | grep -q "Hello world!"
+            '''
           }
         }
       }
-    }    
+    }   
   }
   post{
     success{
