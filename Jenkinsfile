@@ -114,7 +114,7 @@ pipeline{
         expression{ GIT_BRANCH == 'origin/master'}
       }
       steps{
-        withCredentials([sshUserPrivateKey(credentialsId: "ssh-prod", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
+        withCredentials([sshUserPrivateKey(credentialsId: "ssh_prod", keyFileVariable: 'keyfile', usernameVariable: 'NUSER')]) {
           catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
             script{ 
               sh'''
