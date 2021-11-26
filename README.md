@@ -1,4 +1,7 @@
 # alpinehelloworld
-An Alpine-based Docker example
 
-[![Build Status](http://3.87.76.64:8080/buildStatus/icon?job=deploy-helloworld)](http://3.87.76.64:8080/job/deploy-helloworld/)
+An Alpine-based Docker example.
+
+For a project in Jenkins. There is the JenkinsFile to use in a pipeline project.
+
+It allows you to deploy a simple Alpine Hello World.
